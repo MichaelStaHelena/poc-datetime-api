@@ -41,6 +41,7 @@ public class Main {
         exampleLocalToZoned();
         exampleAgeCalculation();
         exampleLegacyDateConversion();
+        exampleDaysOfWeek();
     }
 
     private static void exampleLocalDate() {
@@ -316,5 +317,27 @@ public class Main {
         var backToLegacy = java.util.Date.from(
                 LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
         log.info("De volta ao Date legado: {}", backToLegacy);
+    }
+
+    private static void exampleDaysOfWeek() {
+        var today = LocalDate.now();
+        var dayOfWeek = today.getDayOfWeek();
+        log.info("Dia da semana hoje: {}", dayOfWeek);
+
+        // valor numérico ISO: segunda=1, domingo=7
+        log.info("Valor numérico do dia: {}", dayOfWeek.getValue());
+
+        log.info("É segunda? {}", dayOfWeek == DayOfWeek.MONDAY);
+        log.info("É sexta? {}", dayOfWeek == DayOfWeek.FRIDAY);
+
+        // próxima ocorrência de cada dia a partir de hoje
+        for (DayOfWeek dia : DayOfWeek.values()) {
+            var proxima = today.with(TemporalAdjusters.nextOrSame(dia));
+            log.info("Próxima {}: {}", dia, proxima);
+        }
+
+        // quantos dias faltam para sexta
+        long diasParaSexta = ChronoUnit.DAYS.between(today, today.with(TemporalAdjusters.nextOrSame(DayOfWeek.FRIDAY)));
+        log.info("Dias até sexta: {}", diasParaSexta);
     }
 }
